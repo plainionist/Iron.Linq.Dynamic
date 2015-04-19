@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Iron.Linq.Dynamic</id>
+    <title>Iron.Linq.Dynamic</title>
+    <version>1.1.0.0</version>
+    <authors>ronin4net</authors>
+    <owners>ronin4net</owners>
+    <licenseUrl>http://www.microsoft.com/en-us/openness/licenses.aspx#MPL</licenseUrl>
+    <projectUrl>https://github.com/ronin4net/Iron.Linq.Dynamic</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Hosts and extends Microsoft dynamic linq originally published within VS 2008 samples</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+  </metadata>
+</package>

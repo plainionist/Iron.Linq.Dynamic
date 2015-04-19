@@ -1,0 +1,52 @@
+<Project DefaultTargets="All" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+
+  <PropertyGroup>
+    <ProjectRoot>$([System.IO.Path]::GetFullPath('..'))</ProjectRoot>
+    <BuildRoot>$(ProjectRoot)\build</BuildRoot>
+    <PackageRoot>$(ProjectRoot)\pkg</PackageRoot>
+
+    <Solution>$(ProjectRoot)/Iron.Linq.Dynamic.sln</Solution>
+
+    <BuildOutputPath>$(ProjectRoot)\bin\pkg.in</BuildOutputPath>
+
+    <NuGet>$(BuildRoot)/nuget.exe</NuGet>
+  </PropertyGroup>
+
+  <ItemGroup  Condition=" '$(Package)' == 'Iron.Linq.Dynamic' ">
+    <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.dll"/>
+    <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.pdb"/>
+    <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.xml"/>
+  </ItemGroup>
+
+  <Target Name="Build">
+    <PropertyGroup>
+      <BuildMode>Release</BuildMode>
+      <BuildPlatform>Any CPU</BuildPlatform>
+    </PropertyGroup>
+
+    <RemoveDir Directories="$(BuildOutputPath)"/>
+
+    <MSBuild Projects="$(Solution)"
+             Properties="Configuration=$(BuildMode);Platform=$(BuildPlatform);OutputPath=$(BuildOutputPath)"
+             Targets="Rebuild"
+             BuildInParallel="true"/>
+  </Target>
+
+  <Target Name="All" DependsOnTargets="Build">
+    <RemoveDir Directories="$(PackageRoot)"/>
+
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="Package=Iron.Linq.Dynamic" Targets="_CreatePackage" />
+
+    <CallTarget Targets="CreateStarterRelease"/>
+  </Target>
+
+  <Target Name="_CreatePackage">
+    <MakeDir Directories="$(PackageRoot)\$(Package)\lib\NET45"/>
+
+    <Copy SourceFiles="$(BuildRoot)\$(Package).nuspec" DestinationFolder="$(PackageRoot)\$(Package)"/>
+
+    <Copy SourceFiles="@(File)" DestinationFolder="$(PackageRoot)\$(Package)\lib\NET45"/>
+
+    <Exec Command="$(NuGet) pack $(PackageRoot)\$(Package)\$(Package).nuspec -OutputDirectory $(PackageRoot)\$(Package)"/>
+  </Target>
+</Project>

@@ -12,12 +12,6 @@
     <NuGet>$(BuildRoot)/nuget.exe</NuGet>
   </PropertyGroup>
 
-  <ItemGroup  Condition=" '$(Package)' == 'Iron.Linq.Dynamic' ">
-    <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.dll"/>
-    <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.pdb"/>
-    <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.xml"/>
-  </ItemGroup>
-
   <Target Name="Build">
     <PropertyGroup>
       <BuildMode>Release</BuildMode>
@@ -36,17 +30,22 @@
     <RemoveDir Directories="$(PackageRoot)"/>
 
     <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="Package=Iron.Linq.Dynamic" Targets="_CreatePackage" />
-
-    <CallTarget Targets="CreateStarterRelease"/>
   </Target>
 
   <Target Name="_CreatePackage">
-    <MakeDir Directories="$(PackageRoot)\$(Package)\lib\NET45"/>
+    <MakeDir Directories="$(PackageRoot)\Iron.Linq.Dynamic\lib\NET45"/>
 
-    <Copy SourceFiles="$(BuildRoot)\$(Package).nuspec" DestinationFolder="$(PackageRoot)\$(Package)"/>
+    <Copy SourceFiles="$(BuildRoot)\Iron.Linq.Dynamic.nuspec" DestinationFolder="$(PackageRoot)\Iron.Linq.Dynamic"/>
+    <Copy SourceFiles="$(ProjectRoot)\doc\License.htm" DestinationFolder="$(PackageRoot)\Iron.Linq.Dynamic\content"/>
 
-    <Copy SourceFiles="@(File)" DestinationFolder="$(PackageRoot)\$(Package)\lib\NET45"/>
+    <ItemGroup>
+      <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.dll"/>
+      <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.pdb"/>
+      <File Include="$(BuildOutputPath)\Iron.Linq.Dynamic.xml"/>
+    </ItemGroup>
 
-    <Exec Command="$(NuGet) pack $(PackageRoot)\$(Package)\$(Package).nuspec -OutputDirectory $(PackageRoot)\$(Package)"/>
+    <Copy SourceFiles="@(File)" DestinationFolder="$(PackageRoot)\Iron.Linq.Dynamic\lib\NET45"/>
+    
+    <Exec Command="$(NuGet) pack $(PackageRoot)\Iron.Linq.Dynamic\Iron.Linq.Dynamic.nuspec -OutputDirectory $(PackageRoot)\Iron.Linq.Dynamic"/>
   </Target>
 </Project>
